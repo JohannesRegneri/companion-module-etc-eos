@@ -261,6 +261,7 @@ class ModuleInstance extends InstanceBase {
 		const groupLabel = /^\/eos\/out\/get\/group\/([\d\.]+)\/list\/([\d\.]+)\/([\d\.]+)$/
         const groupNull = /^\/eos\/out\/get\/group\/([\d\.]+)$/
         const colorhs = '/eos/out/color/hs'
+		const macro = '/eos/out/event/macro'
 
         // Maybe for later
 		// const groupChannels = /^\/eos\/out\/get\/group\/([\d\.]+)\/channels\/list\/([\d\.]+)/([\d\.]+)$/
@@ -354,10 +355,19 @@ class ModuleInstance extends InstanceBase {
 					this.setInstanceStates(
 						{
 							cmd: message.args[0].value,
+							cmd_parsed: message.args[0].value,
 						},
 						true
 					)
 				}
+			} else if ((matches = message.address.match(macro))) {
+				this.setInstanceStates(
+						{
+							macro_fired: message.address.match(/\d+$/)[0]
+						},
+						true
+					)
+				this.checkFeedbacks('macroisfired')
 			} else if ((matches = message.address.match(chan))) {
 				// This may be a better place to reset our parameter data variables
 				let chantext = message.args[0].value
@@ -370,6 +380,11 @@ class ModuleInstance extends InstanceBase {
 						this.emptyEncVariables()
 						this.requestFullState()
 						this.lastActChan = actChan
+						this.setInstanceStates( {
+							active_chan: message.args[0].value,
+							},
+							true
+						)
 					}
 				} else if ( this.lastActChan != 0 ) {
 					// No channel active, clear out encoders, set lastActChan
