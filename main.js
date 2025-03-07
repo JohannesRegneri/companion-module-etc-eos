@@ -381,7 +381,7 @@ class ModuleInstance extends InstanceBase {
 						this.requestFullState()
 						this.lastActChan = actChan
 						this.setInstanceStates( {
-							active_chan: message.args[0].value,
+							active_chan: message.args[0].value.split(" [")[0],
 							},
 							true
 						)
