@@ -25,12 +25,36 @@ const GetVariableDefinitions = function(self) {
 		{ variableId: 'cmd_content',					name: 'The current command line output for the user ' },
 		{ variableId: 'show_name',					name: 'The name of the show' },
 
-		{ variableId: 'selected_chan',				name: 'Current selected Channels' },
+		{ variableId: 'selected_chan',				name: 'Current selected channels' },
 		{ variableId: 'hue',					    name: 'Current hue value' },
 		{ variableId: 'saturation',					name: 'Current saturation value' },
 
 		{ variableId: 'macro_fired',				name: 'ID of fired macro' },
 		{ variableId: 'last_macro',					name: 'Last of fired macro' },
+		
+		{ variableId: 'patch_active_id',			name: 'ID of the selected channel' },
+		{ variableId: 'patch_uid',					name: 'OSC UID' },
+		{ variableId: 'patch_label',				name: 'label' },
+		{ variableId: 'patch_fix_manuf',			name: 'fixture manufacturer' },
+		{ variableId: 'patch_fix_model',			name: 'fixture model' },
+		{ variableId: 'patch_dmx_address',			name: 'address' },
+		{ variableId: 'patch_dmx_portoffset',		name: 'adress port/offset' },
+		{ variableId: 'patch_dmx_address_intens',	name: 'address of intensity parameter' },
+		{ variableId: 'patch_current_level',		name: 'current level' },
+		{ variableId: 'patch_osc_gel',				name: 'OSC gel' },
+		{ variableId: 'patch_text_1',				name: 'text 1' },
+		{ variableId: 'patch_text_2',				name: 'text 2' },
+		{ variableId: 'patch_text_3',				name: 'text 3' },
+		{ variableId: 'patch_text_4',				name: 'text 4' },
+		{ variableId: 'patch_text_5',				name: 'text 5' },
+		{ variableId: 'patch_text_6',				name: 'text 6' },
+		{ variableId: 'patch_text_7',				name: 'text 7' },
+		{ variableId: 'patch_text_8',				name: 'text 8' },
+		{ variableId: 'patch_text_9',				name: 'text 9' },
+		{ variableId: 'patch_text_10',				name: 'text 10' },
+		{ variableId: 'patch_part_count',			name: 'part count' },
+		{ variableId: 'patch_notes',				name: 'notes' },
+
 
 	]
 
@@ -63,6 +87,13 @@ const GetVariableDefinitions = function(self) {
     for (let i = 1; i <= constants.NUM_GROUP_LABELS; i++) {
         variableDefinitions.push({ variableId: `group_label_${i}`, name: `Group ${i}'s label` })
     }
+	/*
+	 // Patch Titles '
+	 for (let i = 1; i <= constants.NUM_PATCH_LABELS; i++) {
+        variableDefinitions.push({ variableId: `patch_label_${i}`, name: `Patch ${i}'s label` })
+		variableDefinitions.push({ variableId: `patch_notes_${i}`, name: `Patch ${i}'s notes` })
+    }
+		*/
     // '
 	return variableDefinitions;
 }

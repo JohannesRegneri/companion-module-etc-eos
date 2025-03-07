@@ -20,12 +20,15 @@ class ModuleInstance extends InstanceBase {
 		this.instanceState = {}
 		this.debugToLogger = true
 
+		this.ActChan = -1
 		this.lastActChan = -1
+		
 		this.eos_port = this.config.use_slip ? constants.EOS_PORT_SLIP : constants.EOS_PORT
 		this.readingWheels = false
 
         // how many groups to get labels for
         this.howManyGroupLabels = constants.NUM_GROUP_LABELS //30
+		this.howManyPatchLabels = constants.NUM_PATCH_LABELS
 		
 		// Wheel information as module only variables, not exposed
 		this.wpc = constants.WHEELS_PER_CAT // 64
@@ -263,6 +266,9 @@ class ModuleInstance extends InstanceBase {
         const colorhs = '/eos/out/color/hs'
 		const macro = '/eos/out/event/macro'
 
+		const patchLabel = /^\/eos\/out\/get\/patch\/([\d\.]+)\/([\d\.]+)\/list\/([\d\.]+)\/([\d\.]+)$/
+		const patchNotes = /^\/eos\/out\/get\/patch\/([\d\.]+)\/([\d\.]+)\/notes$/
+
         // Maybe for later
 		// const groupChannels = /^\/eos\/out\/get\/group\/([\d\.]+)\/channels\/list\/([\d\.]+)/([\d\.]+)$/
 
@@ -386,6 +392,7 @@ class ModuleInstance extends InstanceBase {
 					let actChan = chanarg_matches[1]
 					// if channel changed, we need to get full set of wheel data
 					if (actChan != this.lastActChan) {
+						this.actChan = actChan
 						this.emptyEncVariables()
 						this.requestFullState()
 						this.lastActChan = actChan
@@ -402,7 +409,8 @@ class ModuleInstance extends InstanceBase {
 					this.requestFullState()
 					this.lastActChan = 0
 				}
-            } else if ((matches = message.address.match(groupUpdated))) {
+            } 
+			else if ((matches = message.address.match(groupUpdated))) {
                 // A group was updated, request new title
                 // This is not the group number but the index number
                 // let group_num = matches[1]
@@ -433,7 +441,48 @@ class ModuleInstance extends InstanceBase {
                     },
                     true
                 )
-			} else if ( message.address === colorhs ) {
+			} else if ((matches = message.address.match(patchLabel))) {
+                let patch_num = matches[1]
+                let patch_label = message.args[2].value || ''
+                if ( patch_label ) {
+                    this.setInstanceStates( {
+                        //[`patch_label_${patch_num}`]: message.args[2].value,
+						patch_active_id: 					matches[1],			
+						patch_label: 				message.args[2].value,
+						patch_fix_manuf: 			message.args[3].value,	
+						patch_fix_model: 			message.args[4].value,	
+						patch_dmx_address: 			message.args[5].value,
+						patch_dmx_portoffset:		this.addressToPortOffset(message.args[5].value),
+						patch_dmx_address_intens: 	message.args[6].value,
+						patch_current_level: 		message.args[7].value,
+						patch_osc_gel: 				message.args[8].value,
+						patch_text_1: 				message.args[9].value,
+						patch_text_2: 				message.args[10].value,
+						patch_text_3: 				message.args[11].value,
+						patch_text_4: 				message.args[12].value,
+						patch_text_5: 				message.args[13].value,
+						patch_text_6: 				message.args[14].value,
+						patch_text_7: 				message.args[15].value,
+						patch_text_8: 				message.args[16].value,
+						patch_text_9: 				message.args[17].value,
+						patch_text_10: 				message.args[18].value,
+						patch_part_count:			message.args[19].value,
+                        },
+                        true
+                    )
+                }
+            } else if ((matches = message.address.match(patchNotes))) {
+                let patch_num = matches[1]
+                let patch_label = message.args[2].value || ''
+                if ( patch_label ) {
+                    this.setInstanceStates( {
+                        //[`patch_notes_${patch_num}`]: message.args[2].value,
+						patch_notes:			message.args[2].value,
+                        },
+                        true
+                    )
+                }
+            } else if ( message.address === colorhs ) {
 				// this.log('debug', `HS: ${hue} ${sat}`)
 				this.setInstanceStates(
 					{
@@ -604,6 +653,13 @@ class ModuleInstance extends InstanceBase {
             // this.sendOsc('/eos/get/group/index', [ { type: 'i', value: i } ], false)
             this.sendOsc('/eos/get/group', [ { type: 'i', value: i } ], false)
         }
+
+		this.sendOsc('/eos/get/patch', [ { type: 'i', value: this.actChan } ], false)
+		/*
+		for ( let i=1; i <= this.howManyPatchLabels; i++ ) {
+            this.sendOsc('/eos/get/patch', [ { type: 'i', value: i } ], false)
+        }
+		*/
 	}
 
 	/**
@@ -673,6 +729,12 @@ class ModuleInstance extends InstanceBase {
 				true
 			)
 		}
+	}
+
+	addressToPortOffset(address) {
+		const port = Math.floor((address - 1) / 512) + 1;
+		const offset = ((address - 1) % 512) + 1;
+		return `${port}/${offset}`;
 	}
 
 	/**
