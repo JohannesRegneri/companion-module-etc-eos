@@ -23,6 +23,7 @@ module.exports = function (self) {
 				return (
 					feedback.options.number === self.instanceState['macro_fired']
 				)
+					
 			},
 		},
 		pending_cue: {

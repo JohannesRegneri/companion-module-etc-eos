@@ -22,14 +22,16 @@ const GetVariableDefinitions = function(self) {
 		{ variableId: 'cue_previous_duration',		name: 'The previous cue duration in seconds' },
 
 		{ variableId: 'cmd',						name: 'The current command line output for the user ' },
-		{ variableId: 'cmd_parsed',					name: 'The current command line output for the user ' },
+		{ variableId: 'cmd_content',					name: 'The current command line output for the user ' },
 		{ variableId: 'show_name',					name: 'The name of the show' },
 
-		{ variableId: 'active_chan',				name: 'Current selected Channel' },
+		{ variableId: 'selected_chan',				name: 'Current selected Channels' },
 		{ variableId: 'hue',					    name: 'Current hue value' },
 		{ variableId: 'saturation',					name: 'Current saturation value' },
 
-		{ variableId: 'macro_fired',					name: 'ID of Fired Macro' },
+		{ variableId: 'macro_fired',				name: 'ID of fired macro' },
+		{ variableId: 'last_macro',					name: 'Last of fired macro' },
+
 	]
 
 	/* we can capture these params/attributes from related wheel updates as both string and float */

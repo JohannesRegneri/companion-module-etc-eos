@@ -355,19 +355,28 @@ class ModuleInstance extends InstanceBase {
 					this.setInstanceStates(
 						{
 							cmd: message.args[0].value,
-							cmd_parsed: message.args[0].value,
+							cmd_content: message.args[0].value.split(":")[2],
 						},
 						true
 					)
 				}
 			} else if ((matches = message.address.match(macro))) {
-				this.setInstanceStates(
-						{
-							macro_fired: message.address.match(/\d+$/)[0]
-						},
-						true
-					)
+					this.setInstanceStates(
+					{
+						macro_fired: message.address.match(/\d+$/)[0],
+						last_macro: message.address.match(/\d+$/)[0],
+					},
+					true
+				)
 				this.checkFeedbacks('macroisfired')
+
+				setTimeout(() => {
+					this.setInstanceStates({
+						macro_fired: "0",
+					}, true)
+					this.checkFeedbacks('macroisfired')
+				}, 100)
+
 			} else if ((matches = message.address.match(chan))) {
 				// This may be a better place to reset our parameter data variables
 				let chantext = message.args[0].value
@@ -381,7 +390,7 @@ class ModuleInstance extends InstanceBase {
 						this.requestFullState()
 						this.lastActChan = actChan
 						this.setInstanceStates( {
-							active_chan: message.args[0].value.split(" [")[0],
+							selected_chan: message.args[0].value.split(" [")[0],
 							},
 							true
 						)
@@ -606,7 +615,7 @@ class ModuleInstance extends InstanceBase {
 			connected: this.instanceState['connected'],
 		}
 
-		this.checkFeedbacks('pending_cue', 'active_cue', 'connected')
+		this.checkFeedbacks('macroisfired','pending_cue', 'active_cue', 'connected')
 	}
 
 	/**
