@@ -467,6 +467,7 @@ class ModuleInstance extends InstanceBase {
 						patch_text_9: 				message.args[17].value,
 						patch_text_10: 				message.args[18].value,
 						patch_part_count:			message.args[19].value,
+						patch_notes:				'',
                         },
                         true
                     )
