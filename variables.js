@@ -22,7 +22,7 @@ const GetVariableDefinitions = function(self) {
 		{ variableId: 'cue_previous_duration',		name: 'The previous cue duration in seconds' },
 
 		{ variableId: 'cmd',						name: 'The current command line output for the user ' },
-		{ variableId: 'cmd_content',					name: 'The current command line output for the user ' },
+		{ variableId: 'cmd_content',				name: 'The current command line content for the user ' },
 		{ variableId: 'show_name',					name: 'The name of the show' },
 
 		{ variableId: 'selected_chan',				name: 'Current selected channels' },
